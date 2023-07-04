@@ -4,8 +4,9 @@ This repository contains an HTML, CSS, and JavaScript code for an animation sele
 Check out the LED-Controller this is the interface for: [LED-Controller](https://github.com/LetsGaming/LED-Controller-API)
 
 ## Important
-This implementation is only meant for local deployment. There are basically no security checks added, so something like XSS is pretty easy to do!!
-If you want to add those implementations, feel free to create a fork of this repository
+* This implementation is only meant for local deployment!
+* There are basically no security checks added, so something like XSS is pretty easy to do!!
+  - If you want to add those implementations, feel free to create a fork of this repository
 
 ## Getting Started
 To use the animation selection interface, follow these steps:

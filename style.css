@@ -49,7 +49,7 @@ body {
   .sidenav a:hover {
     color: black;
     background-image: 
-    linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet, red); 
+    linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b); 
     background-size: 600% 600%;
     animation: move 30s linear infinite;
   }
@@ -180,7 +180,7 @@ body {
     align-items: center;
 }
 
-#args-container.hide {
+.hide {
     display: none;
 }
 
@@ -260,7 +260,6 @@ label {
     font-size: 16px;
     color: #555;
     width: 50%;
-    margin-left: 25%;
     text-align: center;
 }
 
@@ -291,3 +290,14 @@ label {
 #start-animation:hover {
     background-color: #45a049;
 }
+
+#script-output {
+    background-color: dimgray;
+    color: lightgray;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5;
+  }

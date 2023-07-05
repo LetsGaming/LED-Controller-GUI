@@ -106,7 +106,7 @@ function loadAnimations(category) {
 }
 
 function getCurrentAnimations(category) {
-    if(category === "start") return startAnimations;
+    if (category === "start") return startAnimations;
     switch (category) {
         case 'standard':
             return standardAnimations;
@@ -158,31 +158,31 @@ function deleteArgsInput() {
     try {
         argsContainer.innerHTML = '';
         argsContainer.classList.add("hide");
-        const scriptOutput = document.getElementById('script-output');
-        scriptOutput.textContent = '';
     } catch (error) {
     }
 }
 
 function populateArgsInput(animation) {
-    deleteArgsInput();
+    const argsContainer = document.querySelector('#args-container');
+    const argumentInputContainer = document.createElement('div');
+    argumentInputContainer.id = 'argumentInputContainer';
 
-    var closeButton = document.createElement("span");
-    closeButton.textContent = "X";
-    closeButton.addEventListener("click", function () {
+    argsContainer.innerHTML = ''; // Clear existing content
+
+    const closeButton = document.createElement('span');
+    closeButton.textContent = 'X';
+    closeButton.addEventListener('click', () => {
         deleteArgsInput();
     });
     argsContainer.appendChild(closeButton);
 
     createAnimationInfo(animation);
 
-    amountOfColorPickers = getAmountOfColorPickers(animation);
+    const amountOfColorPickers = getAmountOfColors(animation);
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
     }
 
-    const argumentInputContainer = document.createElement('div');
-    argumentInputContainer.setAttribute('id', 'argumentInputContainer');
     if (animation.args.length > 0) {
         argsContainer.classList.remove('hide');
         const argsTitle = document.createElement('h3');
@@ -190,33 +190,45 @@ function populateArgsInput(animation) {
         argumentInputContainer.appendChild(argsTitle);
         argsContainer.appendChild(argumentInputContainer);
 
-        for (const arg of animation.args) {
-            if (arg === 'red' || arg === 'green' || arg === 'blue' || arg.endsWith('_red') || arg.endsWith('_green') || arg.endsWith('_blue')) {
-                continue; // Skip color arguments and fade arguments, as they were handled above
-            }
+        const argItems = animation.args
+            .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg))
+            .map(arg => {
+                const argItem = document.createElement('div');
+                argItem.classList.add('arg-item');
+                const argLabel = document.createElement('label');
+                argLabel.textContent = `${arg.charAt(0).toUpperCase()}${arg.slice(1)}:`;
+                const argInput = document.createElement('input');
+                argInput.type = 'number';
+                argInput.value = 1;
+                argInput.setAttribute('oninput', 'validity.valid||(value="")');
+                argInput.setAttribute('min', 1);
+                argInput.required = true;
+                argInput.classList.add('arg-input');
+                argInput.addEventListener('change', () => {
+                    if (argInput.value < 1) {
+                        argInput.value = 1;
+                    }
+                });
+                argItem.appendChild(argLabel);
+                argItem.appendChild(argInput);
+                return argItem;
+            });
 
-            const argLabel = document.createElement('label');
-            const labelText = arg.charAt(0).toUpperCase() + arg.slice(1);
-            argLabel.textContent = `${labelText}:`;
-            const argInput = document.createElement('input');
-            argInput.type = 'number';
-            argInput.setAttribute("oninput", "validity.valid||(value='')")
-            argInput.setAttribute("min", 1);
-            argInput.classList.add('arg-input');
-            argumentInputContainer.appendChild(argLabel);
-            argumentInputContainer.appendChild(argInput);
-        }
+        argumentInputContainer.append(...argItems);
     } else {
         argsContainer.classList.add('hide');
     }
+
     argsContainer.classList.remove('hide');
+
     const startButton = document.createElement('button');
+    startButton.id = 'start-animation';
+    startButton.textContent = 'Start Animation';
     startButton.addEventListener('click', () => {
         startAnimation(animation, [getRGB(), ...getOtherArgs()]);
     });
-    startButton.setAttribute('id', 'start-animation');
-    startButton.textContent = 'Start Animation';
 
+    argsContainer.appendChild(argumentInputContainer);
     argsContainer.appendChild(startButton);
 }
 
@@ -245,26 +257,18 @@ function createAnimationInfo(animation) {
     argsContainer.appendChild(animationInfoContainer);
 }
 
-function getAmountOfColorPickers(animation) {
-    // Count occurrences of each color component
-    const counts = {
-        red: 0,
-        green: 0,
-        blue: 0
-    };
+function getAmountOfColors(animation) {
+    const colorComponents = ['red', 'green', 'blue'];
 
-    animation.args.forEach(arg => {
-        if (arg.includes('red') || arg.includes('_red')) {
-            counts.red++;
-        } else if (arg.includes('green') || arg.includes('_green')) {
-            counts.green++;
-        } else if (arg.includes('blue') || arg.includes('_blue')) {
-            counts.blue++;
-        }
-    });
+    const counts = colorComponents.reduce((obj, component) => {
+        obj[component] = animation.args.filter(arg => arg.includes(component) || arg.includes(`_${component}`)).length;
+        return obj;
+    }, {});
 
-    if (counts.red === counts.green && counts.green === counts.blue) {
-        return counts.red;
+    const uniqueCountValues = new Set(Object.values(counts));
+
+    if (uniqueCountValues.size === 1) {
+        return uniqueCountValues.values().next().value;
     }
 }
 
@@ -292,6 +296,11 @@ function hexToRgb(hex) {
     } : null;
 }
 
+function rgbToHex(red, green, blue) {
+    const rgb = (red << 16) | (green << 8) | (blue << 0);
+    return '#' + (0x1000000 + rgb).toString(16).slice(1);
+}
+
 function getRGB() {
     const colorPickerInputs = document.querySelectorAll('.color-picker');
     const rgbValues = [];
@@ -316,59 +325,87 @@ function getOtherArgs() {
     return args;
 }
 
-function startAnimation(animation, args) {
-    const scriptOutput = document.getElementById('script-output');
-    scriptOutput.textContent = '';
-
-    console.log(`Starting ${animation.name} animation with args: ${args}`);
-
-    scriptOutput.textContent = `${animation.name} animation started with args: ${args.join(', ')}`;
-
-    const correctAnimationName = animation.name.toLowerCase().replace(/ /g, "_");
-
-    let apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
-    if(currentCategory === 'start') apiUrl = `http://localhost:5000/led/${correctAnimationName}`;
-
-    const requestData = {};
+async function startAnimation(animation, args) {
     const animationArgs = animation.args;
+    const args0 = args[0];
 
-    for (let index = 0; index < args[0].length; index++) {
-        const element = args[0][index];
-        const arg = animationArgs[index];
-        const value = element;
-        requestData[arg] = value;
+    const correctAnimationName = animation.name.toLowerCase().replace(/ /g, '_');
+    let apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+    if (currentCategory === 'start') {
+        apiUrl = `http://localhost:5000/led/${correctAnimationName}`;
     }
 
-    for (let i = args[0].length; i < animationArgs.length; i++) {
-        const arg = animationArgs[i];
-        const value = args[i - args[0].length + 1];
-        requestData[arg] = value;
-    }
+    const requestData = animationArgs.reduce((data, arg, index) => {
+        if (index < args0.length) {
+            data[arg] = args0[index];
+        } else {
+            data[arg] = args[index - args0.length + 1];
+        }
+        return data;
+    }, {});
 
-    fetch(apiUrl, {
+    console.log("requestData", requestData);
+
+    const fetchOptions = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestData),
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response data
-            console.log(data);
-        })
-        .catch(error => {
-            // Handle any errors
-            console.error('Error:', error);
+    };
+
+    try {
+        const response = await fetch(apiUrl, fetchOptions);
+        const data = await response.json();
+        console.log(data); // Handle the response data
+    } catch (error) {
+        console.error('Error:', error); // Handle any errors
+    }
+
+    createScriptOutput(animation, args);
+
+    const argsInputs = document.getElementsByClassName('arg-input');
+    Array.from(argsInputs).forEach(input => {
+        input.value = input.type === 'color' ? '#000000' : '1';
+    });
+}
+
+function createScriptOutput(animation, args) {
+    const scriptOutput = document.getElementById('script-output');
+    scriptOutput.textContent = '';
+    scriptOutput.classList.remove('hide');
+
+
+    const amountOfColors = getAmountOfColors(animation);
+    const animationArgs = animation.args;
+    const args0 = args[0];
+    if (args0.length !== 0) {
+        const colors = Array.from({ length: amountOfColors }, (_, index) => {
+            const r = args0[index * 3];
+            const g = args0[index * 3 + 1];
+            const b = args0[index * 3 + 2];
+            const color = rgbToHex(r, g, b);
+            return color;
         });
 
-    // Clear argument inputs
-    const argsInputs = document.getElementsByClassName('arg-input');
-    for (const input of argsInputs) {
-        if (input.type == "color") input.value = '#000000';
-        else {
-            input.value = '';
-        }
+        const argsString = colors
+            .map((currentColor, index) => `Color ${index}:<span style="color: ${currentColor}; font-size: 25px;"> &#8801;</span>`)
+            .concat(
+                animationArgs
+                    .slice(args0.length)
+                    .filter(argName => !/^(red|green|blue)$|_(red|green|blue)$/.test(argName))
+                    .map((argName, i) => {
+
+                        const argValue = args[i + 1] || '1'; // Set default value to '1' if argValue is undefined
+                        return `${argName}: ${argValue}`;
+
+                    })
+            )
+            .join(', ');
+
+        scriptOutput.innerHTML = `<span>${animation.name} animation started with arguments:${argsString}</span>`;
+    } else {
+        scriptOutput.textContent = `${animation.name} animation started`;
     }
 }
 

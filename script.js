@@ -1,93 +1,6 @@
-const startAnimations = {
-    'white': {
-        'name': 'White',
-        'description': 'Sets the complete LED strip to white',
-        'args': []
-    },
-    'color': {
-        'name': 'Color',
-        'description': 'Fills the complete LED strip with a solid color',
-        'args': ['red', 'green', 'blue']
-    }
-}
-
-const standardAnimations = {
-    'rainbow': {
-        'name': 'Rainbow',
-        'description': 'Displays a colorful rainbow pattern.',
-        'args': []
-    },
-    'rainbow_cycle': {
-        'name': 'Rainbow Cycle',
-        'description': 'Smoothly transitions colors in a cyclical pattern resembling a rainbow.',
-        'args': []
-    },
-    'theater_chase_rainbow': {
-        'name': 'Theater Chase Rainbow',
-        'description': 'Produces a theater chase effect with a rainbow of colors.',
-        'args': []
-    },
-    'rainbow_comet': {
-        'name': 'Rainbow Comet',
-        'description': 'Simulates a comet-like trail of rainbow colors.',
-        'args': []
-    }
-};
-
-const customAnimations = {
-    'color_wipe': {
-        'name': 'Color Wipe',
-        'description': 'Wipes the LED strip with a single color, creating a visually striking effect.',
-        'args': ['red', 'green', 'blue']
-    },
-    'theater_chase': {
-        'name': 'Theater Chase',
-        'description': 'Creates a theater chase effect with custom colors.',
-        'args': ['red', 'green', 'blue']
-    },
-    'strobe': {
-        'name': 'Strobe',
-        'description': 'Produces a strobe effect using custom colors.',
-        'args': ['red', 'green', 'blue']
-    },
-    'color_chase': {
-        'name': 'Color Chase',
-        'description': 'Generates a chasing effect with custom colors.',
-        'args': ['red', 'green', 'blue']
-    }
-};
-
-const specialAnimations = {
-    'blink': {
-        'name': 'Blink',
-        'description': 'Repeatedly blinks the LED strip with a specified color combination.',
-        'args': ['red', 'green', 'blue', 'duration']
-    },
-    'fade': {
-        'name': 'Fade',
-        'description': 'Gradually fades the LED strip from one color to another.',
-        'args': ['from_red', 'from_green', 'from_blue', 'to_red', 'to_green', 'to_blue', 'steps']
-    },
-    'sparkle': {
-        'name': 'Sparkle',
-        'description': 'Adds sparkling effects to the LED strip by randomly illuminating individual LEDs.',
-        'args': ['red', 'green', 'blue', 'sparkle_count']
-    },
-    'larson_scanner': {
-        'name': 'Larson Scanner',
-        'description': 'Mimics the Larson scanner effect with the specified colors and parameters.',
-        'args': ['red', 'green', 'blue', 'tail_size', 'wait_ms']
-    },
-    'breathing_effect': {
-        'name': 'Breathing Effect',
-        'description': 'Create a breathing effect by gradually changing the brightness of the color.',
-        'args': ['red', 'green', 'blue', 'duration']
-    }
-};
-
 // Global variables
-let currentCategory = 'start';
-let currentAnimations = startAnimations;
+let currentCategory;
+let currentAnimations;
 function loadAnimations(category) {
     deleteArgsInput();
     currentCategory = category;
@@ -101,23 +14,11 @@ function loadAnimations(category) {
     selectedCategoryLink.classList.add('active');
 
     currentAnimations = getCurrentAnimations(category);
-
     createButtons();
 }
 
-function getCurrentAnimations(category) {
-    switch (category) {
-        case 'standard':
-            return standardAnimations;
-        case 'custom':
-            return customAnimations;
-        case 'special':
-            return specialAnimations;
-        default:
-            return startAnimations;
-    }
-    /*
-    fetch(`/led/animations/${category}`)
+async function getCurrentAnimations(category) {
+    fetch(`http://localhost:5000/led/animations/${category}`)
         .then(response => response.json())
         .then(data => {
             return data;
@@ -125,8 +26,8 @@ function getCurrentAnimations(category) {
         .catch(error => {
             // Handle any errors
             console.error('Error:', error);
+            throw error; // Rethrow the error to propagate it further
         });
-        */
 }
 
 function createButtons() {
@@ -361,13 +262,19 @@ async function startAnimation(animation, args) {
 
     try {
         const response = await fetch(apiUrl, fetchOptions);
-        const data = await response.json();
-        console.log(data); // Handle the response data
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data); // Handle the response data
+            createScriptOutput(animation, args);
+        } else {
+            const errorData = await response.json();
+            const scriptOutput = clearAndGetScriptOutput();
+            scriptOutput.innerHTML = `<span style='color: red'>Error ${response.status}</span><br><span>${errorData.message}</span>`;
+        }
     } catch (error) {
-        console.error('Error:', error); // Handle any errors
+        const scriptOutput = clearAndGetScriptOutput();
+        scriptOutput.innerHTML = `<span style='color: red'>Error</span><br><span>Couldn't start ${animation.name}</span>`;
     }
-
-    createScriptOutput(animation, args);
 
     const argsInputs = document.getElementsByClassName('arg-input');
     Array.from(argsInputs).forEach(input => {
@@ -375,11 +282,16 @@ async function startAnimation(animation, args) {
     });
 }
 
-function createScriptOutput(animation, args) {
+function clearAndGetScriptOutput() {
     const scriptOutput = document.getElementById('script-output');
     scriptOutput.textContent = '';
     scriptOutput.classList.remove('hide');
 
+    return scriptOutput;
+}
+
+function createScriptOutput(animation, args) {
+    const scriptOutput = clearScriptOutput();
 
     const amountOfColors = getAmountOfColors(animation);
     const animationArgs = animation.args;
@@ -406,10 +318,10 @@ function createScriptOutput(animation, args) {
                     })
             );
 
-        scriptOutput.innerHTML = `<span>${animation.name} animation started with arguments:${argsString}</span>`;
+        scriptOutput.innerHTML = `<span>${animation.name} started with arguments:${argsString}</span>`;
     } else {
-        scriptOutput.textContent = `${animation.name} animation started`;
+        scriptOutput.textContent = `${animation.name} started`;
     }
 }
 
-createButtons();
+loadAnimations('start');

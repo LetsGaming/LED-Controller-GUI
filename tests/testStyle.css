@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    padding: 20px;
+}
+
+.main {
+    margin-left: 160px;
+    /* Same as the width of the sidenav */
+    padding: 0px 10px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    overflow-x: hidden;
+    padding-top: 20px;
+    transition: width 0.3s;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidenav a {
+    border-radius: 2em;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+    transition: color 0.5s;
+}
+
+.sidenav a:hover {
+    color: black;
+    background-image:
+        linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+    background-size: 400% 400%;
+    animation: move 30s linear infinite;
+    translate: 5% 0%;
+    transition: translate 0.25s ease-out;
+}
+
+@keyframes move {
+    to {
+        background-position: 1000vh;
+    }
+}
+
+.content {
+    display: table-caption;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 2em;
+}
+
+#animation-container {
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.codepen-button {
+    display: block;
+    cursor: pointer;
+    color: white;
+    margin: 0 auto;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 3px;
+    isolation: isolate;
+    width: 200px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+
+.codepen-button:last-child {
+    margin-right: 0px;
+}
+
+.codepen-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400%;
+    height: 100%;
+    background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+    background-size: 25% 100%;
+    animation: codepen-animation .75s linear infinite;
+    animation-play-state: paused;
+    translate: -5% 0%;
+    transition: translate 0.25s ease-out;
+}
+
+.codepen-button:hover::before {
+    animation-play-state: running;
+    transition-duration: 0.75s;
+    translate: 0% 0%;
+}
+
+@keyframes codepen-animation {
+    to {
+        transform: translateX(-25%);
+    }
+}
+
+.codepen-button span {
+    display: block;
+    position: relative;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    background: #000;
+    color: darkgray;
+    border-radius: 3px;
+    height: 100%;
+}
+
+#args-container {
+    margin-top: 20px;
+    background-color: dimgray;
+    padding: 20px;
+    padding-top: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
+
+#args-container h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+#args-container span {
+    position: relative;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 5px;
+    color: #f00;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+#animationInfoContainer {
+    background-color: darkgray;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+#animationInfoContainer h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+#animationInfoContainer h2 {
+    font-size: 18px;
+    margin-top: 15px;
+    color: #333;
+}
+
+#animationInfoContainer h3 {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+}
+
+.color-picker-container {
+    align-items: center;
+    margin-bottom: 10px;
+    width: 50%;
+}
+
+label {
+    font-size: 18px;
+}
+
+.color-picker-container label {
+    margin-right: 10px;
+    color: #333;
+}
+
+#argumentInputContainer {
+    display: grid;
+    flex-wrap: wrap;
+}
+
+.arg-input {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #555;
+    width: 50%;
+    text-align: center;
+}
+
+.arg-input[type="color"] {
+    padding: 4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 0;
+    width: 75px;
+    height: 70px;
+    border-radius: 4px;
+}
+
+#start-animation {
+    margin-top: 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    outline: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#start-animation:hover {
+    background-color: #45a049;
+}
+
+#script-output {
+    background-color: dimgray;
+    color: lightgray;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .sidenav {
+        height: 145px !important;
+        width: 100%;
+        padding-top: 0% !important;
+        text-align: center;
+    }
+
+    .sidenav a {
+        font-size: 16px;
+        padding: 9px;
+    }
+
+    .sidenav a:hover {
+        translate: 0% !important;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .content {
+        margin-top: 35%;
+        width: 400px;
+    }
+
+    #animation-container {
+        display: inline-block !important;
+        margin-bottom: 0 !important;
+    }
+
+    .codepen-button {
+        width: 150px !important;
+        font-size: 0.9rem;
+        margin-right: 0px !important;
+    }
+}

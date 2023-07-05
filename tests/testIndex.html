@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url("testStyle.css");
+    </style>
+    <script src="testScript.js" defer></script>
+</head>
+
+<body>
+    <div id="sidebar" class="sidenav">
+        <ul id="category-list">
+            <li><a onclick="loadAnimations('start')">Start Animations</a></li>
+            <li><a onclick="loadAnimations('standard')">Standard Animations</a></li>
+            <li><a onclick="loadAnimations('custom')">Custom Animations</a></li>
+            <li><a onclick="loadAnimations('special')">Special Animations</a></li>
+        </ul>
+    </div>
+<div class="main">
+    <div class="content">
+        <h2>Select an animation:</h2>
+
+        <div id="animation-container"></div>
+
+        <div id="args-container" class="hide">
+
+            <div class="flex-container"></div>
+        </div>
+
+        <div id="script-output" class="script-output hide"></div>
+    </div>
+</div>
+</body>
+
+</html>

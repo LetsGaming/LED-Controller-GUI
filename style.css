@@ -13,7 +13,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: gray;
-    padding: 20px; /* Add some padding for mobile devices */
+    padding: 20px;
 }
 
 .main {
@@ -24,43 +24,58 @@ body {
 
 .sidenav {
     height: 100%;
-    width: 160px;
+    width: 240px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #333;
     overflow-x: hidden;
     padding-top: 20px;
-}
-
-.sidenav a {
-    padding: 6px 8px 6px 16px;
+    transition: width 0.3s;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidenav a {
+    border-radius: 2em;
+    padding: 12px;
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
+    font-size: 18px;
+    color: #fff;
     display: block;
-}
-
-.sidenav a:hover {
-    color: #f1f1f1;
-}
+    transition: color 0.5s;
+  }
+  
+  .sidenav a:hover {
+    color: black;
+    background-image: 
+    linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet, red); 
+    background-size: 600% 600%;
+    animation: move 30s linear infinite;
+  }
+  
+  @keyframes move {
+    to {
+      background-position: 1000vh;
+    }
+  }
 
 @media only screen and (max-width: 768px) {
 
     .sidenav {
-        height: 150px;
+        height: 150px !important;
         width: 100%;
+        padding-top: 0 !important;
     }
 
     .sidenav a {
-        font-size: 20px; /* Decrease the font size for mobile devices */
+        font-size: 16px;
     }
 
     .main {
-        margin-left: 0; /* Remove the left margin for mobile devices */
+        margin-left: 0;
     }
-    
+
     .content {
         margin-top: 25%;
     }
@@ -85,7 +100,8 @@ body {
     display: table-caption;
     text-align: center;
     padding: 20px;
-    background-color: white;
+    background-color: #333;
+    border-radius: 2em;
 }
 
 #animation-container {
@@ -123,9 +139,9 @@ body {
     left: 0;
     width: 400%;
     height: 100%;
-    background: linear-gradient(115deg,#4fcf70,#fad648,#a767e5,#12bcfe,#44ce7b);
+    background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
     background-size: 25% 100%;
-    animation: an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop .75s linear infinite;
+    animation: codepen-animation .75s linear infinite;
     animation-play-state: paused;
     translate: -5% 0%;
     transition: translate 0.25s ease-out;
@@ -137,7 +153,7 @@ body {
     translate: 0% 0%;
 }
 
-@keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
+@keyframes codepen-animation {
     to {
         transform: translateX(-25%);
     }
@@ -149,14 +165,16 @@ body {
     padding: 1rem 1.5rem;
     font-size: 1.1rem;
     background: #000;
+    color: darkgray;
     border-radius: 3px;
     height: 100%;
 }
 
 #args-container {
     margin-top: 20px;
-    background-color: #f5f5f5;
+    background-color: dimgray;
     padding: 20px;
+    padding-top: 5px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     align-items: center;
@@ -179,17 +197,19 @@ body {
     cursor: pointer;
     padding: 5px;
     color: #f00;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 900;
 }
 
 #animationInfoContainer {
-    background-color: #f7f7f7;
+    background-color: darkgray;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
     width: 400px;
     margin: 0 auto;
+    margin-bottom: 10px;
 }
 
 #animationInfoContainer h1 {

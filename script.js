@@ -1,3 +1,16 @@
+const startAnimations = {
+    'white': {
+        'name': 'White',
+        'description': 'Sets the complete LED strip to white',
+        'args': []
+    },
+    'color': {
+        'name': 'Color',
+        'description': 'Fills the complete LED strip with a solid color',
+        'args': ['red', 'green', 'blue']
+    }
+}
+
 const standardAnimations = {
     'rainbow': {
         'name': 'Rainbow',
@@ -73,9 +86,8 @@ const specialAnimations = {
 };
 
 // Global variables
-let currentCategory = 'standard';
-let currentAnimations = standardAnimations;
-
+let currentCategory = 'start';
+let currentAnimations = startAnimations;
 function loadAnimations(category) {
     deleteArgsInput();
     currentCategory = category;
@@ -94,6 +106,7 @@ function loadAnimations(category) {
 }
 
 function getCurrentAnimations(category) {
+    if(category === "start") return startAnimations;
     switch (category) {
         case 'standard':
             return standardAnimations;
@@ -308,12 +321,13 @@ function startAnimation(animation, args) {
     scriptOutput.textContent = '';
 
     console.log(`Starting ${animation.name} animation with args: ${args}`);
-    // Call the actual API or implementation to start the animation with the provided arguments
 
     scriptOutput.textContent = `${animation.name} animation started with args: ${args.join(', ')}`;
 
     const correctAnimationName = animation.name.toLowerCase().replace(/ /g, "_");
-    const apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+
+    let apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+    if(currentCategory === 'start') apiUrl = `http://localhost:5000/led/${correctAnimationName}`;
 
     const requestData = {};
     const animationArgs = animation.args;

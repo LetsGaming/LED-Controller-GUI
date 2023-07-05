@@ -106,7 +106,6 @@ function loadAnimations(category) {
 }
 
 function getCurrentAnimations(category) {
-    if (category === "start") return startAnimations;
     switch (category) {
         case 'standard':
             return standardAnimations;
@@ -115,7 +114,7 @@ function getCurrentAnimations(category) {
         case 'special':
             return specialAnimations;
         default:
-            return standardAnimations;
+            return startAnimations;
     }
     /*
     fetch(`/led/animations/${category}`)
@@ -184,11 +183,13 @@ function populateArgsInput(animation) {
     }
 
     if (animation.args.length > 0) {
-        argsContainer.classList.remove('hide');
-        const argsTitle = document.createElement('h3');
-        argsTitle.textContent = 'Animation Arguments:';
-        argumentInputContainer.appendChild(argsTitle);
-        argsContainer.appendChild(argumentInputContainer);
+        if (animation.args.length > amountOfColorPickers * 3) {
+            argsContainer.classList.remove('hide');
+            const argsTitle = document.createElement('h3');
+            argsTitle.textContent = 'Animation Arguments:';
+            argumentInputContainer.appendChild(argsTitle);
+            argsContainer.appendChild(argumentInputContainer);
+        }
 
         const argItems = animation.args
             .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg))
@@ -275,7 +276,6 @@ function getAmountOfColors(animation) {
 function createColorPicker(labelText, argPrefix) {
     const colorPickerContainer = document.createElement('div');
     colorPickerContainer.classList.add('color-picker-container');
-    argsContainer.appendChild(colorPickerContainer);
 
     const colorPickerLabel = document.createElement('label');
     colorPickerLabel.textContent = labelText;
@@ -285,6 +285,11 @@ function createColorPicker(labelText, argPrefix) {
     colorPickerInput.setAttribute('data-arg-prefix', argPrefix);
     colorPickerContainer.appendChild(colorPickerLabel);
     colorPickerContainer.appendChild(colorPickerInput);
+
+    const flexContainer = document.createElement('div');
+    flexContainer.classList.add('flex-container');
+    flexContainer.appendChild(colorPickerContainer);
+    argsContainer.appendChild(flexContainer);
 }
 
 function hexToRgb(hex) {
@@ -389,19 +394,17 @@ function createScriptOutput(animation, args) {
         });
 
         const argsString = colors
-            .map((currentColor, index) => `Color ${index}:<span style="color: ${currentColor}; font-size: 25px;"> &#8801;</span>`)
+            .map((currentColor, index) => `<br>Color ${index}:<span style="color: ${currentColor}; font-size: 25px;"> ▇</span>`)
             .concat(
                 animationArgs
                     .slice(args0.length)
                     .filter(argName => !/^(red|green|blue)$|_(red|green|blue)$/.test(argName))
                     .map((argName, i) => {
-
-                        const argValue = args[i + 1] || '1'; // Set default value to '1' if argValue is undefined
-                        return `${argName}: ${argValue}`;
+                        const argValue = args[i + 1];
+                        return `<br>${argName}: ${argValue}`;
 
                     })
-            )
-            .join(', ');
+            );
 
         scriptOutput.innerHTML = `<span>${animation.name} animation started with arguments:${argsString}</span>`;
     } else {

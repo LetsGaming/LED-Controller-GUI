@@ -1,7 +1,7 @@
 # LED-Controller-Interface
 This repository contains HTML, CSS, and JavaScript code for an animation selection interface. The interface allows users to select and configure various animations to be displayed on an LED strip via an API. The animations are categorized into four groups: start animations, standard animations, custom animations, and special animations.
 ### Note
-Check out the LED-Controller-API, which this is the Interface for: [LED-Controller-API](https://github.com/LetsGaming/LED-Controller-API)
+Check out the LED-Controller-API, which this is the GUI for: [LED-Controller-API](https://github.com/LetsGaming/LED-Controller-API)
 
 ## Important
 * This implementation is only meant for local deployment!

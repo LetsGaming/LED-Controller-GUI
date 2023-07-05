@@ -1,7 +1,7 @@
 # LED-Controller-Interface
-This repository contains an HTML, CSS, and JavaScript code for an animation selection interface. The interface allows users to select and configure various animations to be displayed on an LED strip. The animations are categorized into three groups: standard animations, custom animations, and special animations.
+This repository contains HTML, CSS, and JavaScript code for an animation selection interface. The interface allows users to select and configure various animations to be displayed on an LED strip via an API. The animations are categorized into four groups: start animations, standard animations, custom animations, and special animations.
 ### Note
-Check out the LED-Controller-API this is the Interface for: [LED-Controller-API](https://github.com/LetsGaming/LED-Controller-API)
+Check out the LED-Controller-API, which this is the Interface for: [LED-Controller-API](https://github.com/LetsGaming/LED-Controller-API)
 
 ## Important
 * This implementation is only meant for local deployment!
@@ -15,7 +15,7 @@ To use the animation selection interface, follow these steps:
 2. Open the index.html file in a web browser.
 
 ## Usage
-Upon opening the index.html file in a web browser, you will see a sidebar on the left side of the page containing three categories: "Standard Animations," "Custom Animations," and "Special Animations." Clicking on any of these categories will load the corresponding animations in the main content area.
+Upon opening the index.html file in a web browser, you will see a sidebar on the left side of the page, containing four categories: "Start Animations", "Standard Animations," "Custom Animations," and "Special Animations." Clicking on any of these categories will load the corresponding animations in the main content area.
 
 In the main content area, you will see a list of animations for the selected category. Each animation is represented by a button with its name. Clicking on an animation button will display the animation's arguments, if any, in the arguments container below.
 

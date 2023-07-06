@@ -12,7 +12,7 @@ Check out the LED-Controller-API, which this is the GUI for: [LED-Controller-API
 To use the animation selection interface, follow these steps:
 
 1. Clone the repository or download the HTML, CSS, and JavaScript files to your local machine.
-  - ```bash git clone https://github.com/LetsGaming/led-controller-gui.git ``` 
+  - ```git clone https://github.com/LetsGaming/led-controller-gui.git ``` 
 2. Open the index.html file in a web browser.
   - Alternatively you can also create a local Webserver in your Network, so that all Devices connected to the network can interact with the website.
 3. The "start animations"-category will be shown. To select other animations, select categories from the top-left (Desktop) or top side.

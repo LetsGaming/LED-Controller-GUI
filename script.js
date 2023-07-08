@@ -239,7 +239,7 @@ function setBrightness(value) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ brightness: value })
+      body: JSON.stringify({ brightness: parseInt(value) })
     })
     .then(response => {
       if (response.ok) {
@@ -249,7 +249,7 @@ function setBrightness(value) {
       }
     })
     .then(data => {
-      console.log('API call successful:', data);
+
     })
     .catch(error => {
       console.error('API call failed:', error);
@@ -283,8 +283,6 @@ async function startAnimation(animation, args) {
         return data;
     }, {});
 
-    console.log("requestData", requestData);
-
     const fetchOptions = {
         method: 'POST',
         headers: {
@@ -297,7 +295,6 @@ async function startAnimation(animation, args) {
         const response = await fetch(apiUrl, fetchOptions);
         if (response.ok) {
             const data = await response.json();
-            console.log(data); // Handle the response data
             createScriptOutput(animation, args);
         } else {
             const errorData = await response.json();

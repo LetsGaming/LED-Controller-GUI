@@ -1,94 +1,8 @@
-const startAnimations = {
-    'white': {
-        'name': 'White',
-        'description': 'Sets the complete LED strip to white',
-        'args': []
-    },
-    'color': {
-        'name': 'Color',
-        'description': 'Fills the complete LED strip with a solid color',
-        'args': ['red', 'green', 'blue']
-    }
-}
-
-const standardAnimations = {
-    'rainbow': {
-        'name': 'Rainbow',
-        'description': 'Displays a colorful rainbow pattern.',
-        'args': []
-    },
-    'rainbow_cycle': {
-        'name': 'Rainbow Cycle',
-        'description': 'Smoothly transitions colors in a cyclical pattern resembling a rainbow.',
-        'args': []
-    },
-    'theater_chase_rainbow': {
-        'name': 'Theater Chase Rainbow',
-        'description': 'Produces a theater chase effect with a rainbow of colors.',
-        'args': []
-    },
-    'rainbow_comet': {
-        'name': 'Rainbow Comet',
-        'description': 'Simulates a comet-like trail of rainbow colors.',
-        'args': []
-    }
-};
-
-const customAnimations = {
-    'color_wipe': {
-        'name': 'Color Wipe',
-        'description': 'Wipes the LED strip with a single color, creating a visually striking effect.',
-        'args': ['red', 'green', 'blue']
-    },
-    'theater_chase': {
-        'name': 'Theater Chase',
-        'description': 'Creates a theater chase effect with custom colors.',
-        'args': ['red', 'green', 'blue']
-    },
-    'strobe': {
-        'name': 'Strobe',
-        'description': 'Produces a strobe effect using custom colors.',
-        'args': ['red', 'green', 'blue']
-    },
-    'color_chase': {
-        'name': 'Color Chase',
-        'description': 'Generates a chasing effect with custom colors.',
-        'args': ['red', 'green', 'blue']
-    }
-};
-
-const specialAnimations = {
-    'blink': {
-        'name': 'Blink',
-        'description': 'Repeatedly blinks the LED strip with a specified color combination.',
-        'args': ['red', 'green', 'blue', 'duration']
-    },
-    'fade': {
-        'name': 'Fade',
-        'description': 'Gradually fades the LED strip from one color to another.',
-        'args': ['from_red', 'from_green', 'from_blue', 'to_red', 'to_green', 'to_blue', 'steps']
-    },
-    'sparkle': {
-        'name': 'Sparkle',
-        'description': 'Adds sparkling effects to the LED strip by randomly illuminating individual LEDs.',
-        'args': ['red', 'green', 'blue', 'sparkle_count']
-    },
-    'larson_scanner': {
-        'name': 'Larson Scanner',
-        'description': 'Mimics the Larson scanner effect with the specified colors and parameters.',
-        'args': ['red', 'green', 'blue', 'tail_size', 'wait_ms']
-    },
-    'breathing_effect': {
-        'name': 'Breathing Effect',
-        'description': 'Create a breathing effect by gradually changing the brightness of the color.',
-        'args': ['red', 'green', 'blue', 'duration']
-    }
-};
-
 // Global variables
-let currentCategory = 'start';
-let currentAnimations = startAnimations;
-function loadAnimations(category) {
+let currentCategory;
+let currentAnimations;
+
+async function loadAnimations(category) {
     deleteArgsInput();
     currentCategory = category;
     const categoryList = document.getElementById('category-list');
@@ -100,35 +14,20 @@ function loadAnimations(category) {
     const selectedCategoryLink = document.querySelector(`a[onclick="loadAnimations('${category}')"]`);
     selectedCategoryLink.classList.add('active');
 
-    currentAnimations = getCurrentAnimations(category);
-
+    currentAnimations = await getCurrentAnimations(category);
     createButtons();
 }
 
-function getCurrentAnimations(category) {
-    switch (category) {
-        case 'standard':
-            return standardAnimations;
-
-        case 'custom':
-            return customAnimations;
-
-        case 'special':
-            return specialAnimations;
-        default:
-            return startAnimations;
+async function getCurrentAnimations(category) {
+    try {
+        const response = await fetch(`http://192.168.1.110:5000/led/animations/${category}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error:', error);
+        throw error; // Rethrow the error to propagate it further
     }
-    /*
-    fetch(`/led/animations/${category}`)
-        .then(response => response.json())
-        .then(data => {
-            return data;
-        })
-        .catch(error => {
-            // Handle any errors
-            console.error('Error:', error);
-        });
-        */
 }
 
 function createButtons() {
@@ -332,14 +231,47 @@ function getOtherArgs() {
     return args;
 }
 
+function setBrightness(value) {
+    var apiUrl = 'http://192.168.1.110:5000/led/brightness';
+    
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ brightness: value })
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('API call failed');
+      }
+    })
+    .then(data => {
+      console.log('API call successful:', data);
+    })
+    .catch(error => {
+      console.error('API call failed:', error);
+    });
+  }
+  
+  // Event listener for slide input changes
+  document.getElementById('brightness').addEventListener('change', function() {
+    var value = this.value;
+    console.log('Value set:', value);
+    
+    setBrightness(value);
+  });
+
 async function startAnimation(animation, args) {
     const animationArgs = animation.args;
     const args0 = args[0];
 
     const correctAnimationName = animation.name.toLowerCase().replace(/ /g, '_');
-    let apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+    let apiUrl = `http://192.168.1.110:5000/led/animations/${currentCategory}/${correctAnimationName}`;
     if (currentCategory === 'start') {
-        apiUrl = `http://localhost:5000/led/${correctAnimationName}`;
+        apiUrl = `http://192.168.1.110:5000/led/${correctAnimationName}`;
     }
 
     const requestData = animationArgs.reduce((data, arg, index) => {
@@ -375,6 +307,7 @@ async function startAnimation(animation, args) {
     } catch (error) {
         const scriptOutput = clearAndGetScriptOutput();
         scriptOutput.innerHTML = `<span style='color: red'>Error</span><br><span>Couldn't start ${animation.name}</span>`;
+        console.error("Start Error", error);
     }
 
     const argsInputs = document.getElementsByClassName('arg-input');
@@ -392,7 +325,7 @@ function clearAndGetScriptOutput() {
 }
 
 function createScriptOutput(animation, args) {
-    const scriptOutput = clearScriptOutput();
+    const scriptOutput = clearAndGetScriptOutput();
 
     const amountOfColors = getAmountOfColors(animation);
     const animationArgs = animation.args;
@@ -425,4 +358,4 @@ function createScriptOutput(animation, args) {
     }
 }
 
-createButtons();
+loadAnimations('start');

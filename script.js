@@ -1,7 +1,8 @@
 // Global variables
 let currentCategory;
 let currentAnimations;
-function loadAnimations(category) {
+
+async function loadAnimations(category) {
     deleteArgsInput();
     currentCategory = category;
     const categoryList = document.getElementById('category-list');
@@ -13,21 +14,20 @@ function loadAnimations(category) {
     const selectedCategoryLink = document.querySelector(`a[onclick="loadAnimations('${category}')"]`);
     selectedCategoryLink.classList.add('active');
 
-    currentAnimations = getCurrentAnimations(category);
+    currentAnimations = await getCurrentAnimations(category);
     createButtons();
 }
 
 async function getCurrentAnimations(category) {
-    fetch(`http://localhost:5000/led/animations/${category}`)
-        .then(response => response.json())
-        .then(data => {
-            return data;
-        })
-        .catch(error => {
-            // Handle any errors
-            console.error('Error:', error);
-            throw error; // Rethrow the error to propagate it further
-        });
+    try {
+        const response = await fetch(`http://192.168.1.110:5000/led/animations/${category}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error:', error);
+        throw error; // Rethrow the error to propagate it further
+    }
 }
 
 function createButtons() {
@@ -231,14 +231,47 @@ function getOtherArgs() {
     return args;
 }
 
+function setBrightness(value) {
+    var apiUrl = 'http://192.168.1.110:5000/led/brightness';
+    
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ brightness: value })
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('API call failed');
+      }
+    })
+    .then(data => {
+      console.log('API call successful:', data);
+    })
+    .catch(error => {
+      console.error('API call failed:', error);
+    });
+  }
+  
+  // Event listener for slide input changes
+  document.getElementById('brightness').addEventListener('change', function() {
+    var value = this.value;
+    console.log('Value set:', value);
+    
+    setBrightness(value);
+  });
+
 async function startAnimation(animation, args) {
     const animationArgs = animation.args;
     const args0 = args[0];
 
     const correctAnimationName = animation.name.toLowerCase().replace(/ /g, '_');
-    let apiUrl = `http://localhost:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+    let apiUrl = `http://192.168.1.110:5000/led/animations/${currentCategory}/${correctAnimationName}`;
     if (currentCategory === 'start') {
-        apiUrl = `http://localhost:5000/led/${correctAnimationName}`;
+        apiUrl = `http://192.168.1.110:5000/led/${correctAnimationName}`;
     }
 
     const requestData = animationArgs.reduce((data, arg, index) => {
@@ -274,6 +307,7 @@ async function startAnimation(animation, args) {
     } catch (error) {
         const scriptOutput = clearAndGetScriptOutput();
         scriptOutput.innerHTML = `<span style='color: red'>Error</span><br><span>Couldn't start ${animation.name}</span>`;
+        console.error("Start Error", error);
     }
 
     const argsInputs = document.getElementsByClassName('arg-input');
@@ -291,7 +325,7 @@ function clearAndGetScriptOutput() {
 }
 
 function createScriptOutput(animation, args) {
-    const scriptOutput = clearScriptOutput();
+    const scriptOutput = clearAndGetScriptOutput();
 
     const amountOfColors = getAmountOfColors(animation);
     const animationArgs = animation.args;

@@ -18,7 +18,11 @@
             <li><a onclick="loadAnimations('standard')">Standard Animations</a></li>
             <li><a onclick="loadAnimations('custom')">Custom Animations</a></li>
             <li><a onclick="loadAnimations('special')">Special Animations</a></li>
-            <li><label id="brightness-label" for="brightness">Brightness:</label><input id="brightness" type="range" value="0" min="0" max="255"></li>
+            <li>
+                <label id="brightness-label" for="brightness">Brightness:</label>
+                <input id="brightness" type="range" value="0" min="0" max="255" onchange="updateBrightnessValue(this.value)">
+                <span id="brightness-value">0</span>
+              </li>         
         </ul>
     </div>
 <div class="main">

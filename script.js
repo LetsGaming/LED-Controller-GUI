@@ -1,3 +1,14 @@
+// Event listener for slide input changes
+document.getElementById('brightness').addEventListener('input', function () {
+    document.getElementById("brightness-value").textContent = this.value;
+});
+
+document.getElementById('brightness').addEventListener('change', function () {
+    console.log('Value set:', this.value);
+
+    setBrightness(value);
+});
+
 // Global variables
 let currentCategory;
 let currentAnimations;
@@ -16,6 +27,7 @@ async function loadAnimations(category) {
 
     currentAnimations = await getCurrentAnimations(category);
     createButtons();
+    getBrightnessAndSetDisplay();
 }
 
 async function getCurrentAnimations(category) {
@@ -231,38 +243,56 @@ function getOtherArgs() {
     return args;
 }
 
+function getBrightnessAndSetDisplay() {
+    var apiUrl = 'http://192.168.1.110:5000/led/getBrightness';
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API call failed');
+            }
+        })
+        .then(data => {
+            const brightnessDisplay = document.getElementById("brightness-value");
+            brightnessDisplay.textContent = data['current_brightness'];
+        })
+        .catch(error => {
+            console.error('API call failed:', error);
+        });
+    
+}
+
 function setBrightness(value) {
     var apiUrl = 'http://192.168.1.110:5000/led/brightness';
-    
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ brightness: parseInt(value) })
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('API call failed');
-      }
-    })
-    .then(data => {
 
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ brightness: parseInt(value) })
     })
-    .catch(error => {
-      console.error('API call failed:', error);
-    });
-  }
-  
-  // Event listener for slide input changes
-  document.getElementById('brightness').addEventListener('change', function() {
-    var value = this.value;
-    console.log('Value set:', value);
-    
-    setBrightness(value);
-  });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API call failed');
+            }
+        })
+        .then(data => {
+
+        })
+        .catch(error => {
+            console.error('API call failed:', error);
+        });
+}
 
 async function startAnimation(animation, args) {
     const animationArgs = animation.args;

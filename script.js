@@ -1,10 +1,13 @@
 // Event listener for slide input changes
-document.getElementById('brightness').addEventListener('input', function () {
+const brightnessSlider = document.getElementById('brightness')
+
+brightnessSlider.addEventListener('input', function () {
     document.getElementById("brightness-value").textContent = this.value;
 });
 
-document.getElementById('brightness').addEventListener('change', function () {
-    console.log('Value set:', this.value);
+brightnessSlider.addEventListener('change', function () {
+    var value = this.value;
+    console.log('Value set:', value);
 
     setBrightness(value);
 });
@@ -261,7 +264,9 @@ function getBrightnessAndSetDisplay() {
         })
         .then(data => {
             const brightnessDisplay = document.getElementById("brightness-value");
-            brightnessDisplay.textContent = data['current_brightness'];
+            const current_brightness = data['current_brightness'];
+            brightnessDisplay.textContent = current_brightness;
+            brightnessSlider.value = current_brightness;
         })
         .catch(error => {
             console.error('API call failed:', error);

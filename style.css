@@ -35,7 +35,7 @@ body {
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.sidenav a {
+.sidenav a{
     border-radius: 2em;
     padding: 12px;
     text-decoration: none;
@@ -45,7 +45,13 @@ body {
     transition: color 0.5s;
 }
 
-.sidenav a:hover{
+.sidenav span {
+    font-size: 18px;
+    color: #fff;
+    margin-left: 45%;
+}
+
+.sidenav a:hover {
     color: black;
     background-image:
         linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
@@ -64,43 +70,44 @@ body {
 #brightness-label {
     color: white;
 }
+
 input[type="range"] {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     width: 100%;
     cursor: pointer;
     outline: none;
     overflow: hidden;
     background: transparent;
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-webkit-slider-runnable-track {
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
     height: 25px;
     background: linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-moz-range-track {
+}
+
+input[type="range"]::-moz-range-track {
     height: 25px;
     background: linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-webkit-slider-thumb {
+}
+
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     height: 25px;
     width: 25px;
     background-color: #fff;
     border-radius: 50%;
     border: 2px solid gray;
     box-shadow: 407px 0 0 400px gray;
-  }
-  
-  
-  /* Thumb: Firefox */
-  input[type="range"]::-moz-range-thumb {
+}
+
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
     height: 25px;
     width: 25px;
     background-color: #fff;
@@ -108,7 +115,7 @@ input[type="range"] {
     border: 1px solid gray;
     /*  slider progress trick  */
     box-shadow: -407px 0 0 -400px gray;
-  }
+}
 
 .right-sidebarshow {
     right: 0;
@@ -335,6 +342,10 @@ label {
     .sidenav a {
         font-size: 16px;
         padding: 9px;
+    }
+
+    .sidenav span {
+        margin-left: 0 !important;
     }
 
     .sidenav a:hover {

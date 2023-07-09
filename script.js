@@ -247,7 +247,7 @@ function getBrightnessAndSetDisplay() {
     var apiUrl = 'http://192.168.1.110:5000/led/getBrightness';
 
     fetch(apiUrl, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },

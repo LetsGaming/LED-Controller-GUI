@@ -15,6 +15,7 @@ brightnessSlider.addEventListener('change', function () {
 // Global variables
 let currentCategory;
 let currentAnimations;
+let multipleColors = false;
 
 async function loadAnimations(category) {
     deleteArgsInput();
@@ -83,21 +84,21 @@ function populateArgsInput(animation) {
     argumentInputContainer.id = 'argumentInputContainer';
 
     argsContainer.innerHTML = ''; // Clear existing content
-
+    
     const closeButton = document.createElement('span');
     closeButton.textContent = 'X';
     closeButton.addEventListener('click', () => {
         deleteArgsInput();
     });
     argsContainer.appendChild(closeButton);
-
+    
     createAnimationInfo(animation);
-
+    
     const amountOfColorPickers = getAmountOfColors(animation);
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
     }
-
+    
     if (animation.args.length > 0) {
         if (animation.args.length > amountOfColorPickers * 3) {
             argsContainer.classList.remove('hide');
@@ -106,14 +107,14 @@ function populateArgsInput(animation) {
             argumentInputContainer.appendChild(argsTitle);
             argsContainer.appendChild(argumentInputContainer);
         }
-
+    
         const argItems = animation.args
             .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg))
             .map(arg => {
                 const argItem = document.createElement('div');
                 argItem.classList.add('arg-item');
                 const argLabel = document.createElement('label');
-                argLabel.textContent = `${arg.charAt(0).toUpperCase()}${arg.slice(1)}:`;
+                argLabel.textContent = `${formatArgLabel(arg)}:`;
                 const argInput = document.createElement('input');
                 argInput.type = 'number';
                 argInput.value = 1;
@@ -130,24 +131,41 @@ function populateArgsInput(animation) {
                 argItem.appendChild(argInput);
                 return argItem;
             });
-
+    
         argumentInputContainer.append(...argItems);
     } else {
         argsContainer.classList.add('hide');
     }
-
+    
+    if (animation.args.includes('colors')) {
+        multipleColors = true;
+        const addColorPickerButton = document.createElement('button');
+        addColorPickerButton.textContent = 'Add Color Picker';
+        addColorPickerButton.addEventListener('click', () => {
+            const colorPickerIndex = amountOfColorPickers;
+            createColorPicker(`Color ${colorPickerIndex}:`, `color-${colorPickerIndex}`);
+        });
+        argsContainer.appendChild(addColorPickerButton);
+    }
+    
     argsContainer.classList.remove('hide');
-
+    
     const startButton = document.createElement('button');
     startButton.id = 'start-animation';
     startButton.textContent = 'Start Animation';
     startButton.addEventListener('click', () => {
         startAnimation(animation, [getRGB(), ...getOtherArgs()]);
     });
-
+    
     argsContainer.appendChild(argumentInputContainer);
     argsContainer.appendChild(startButton);
-}
+    }
+    
+    function formatArgLabel(arg) {
+    const words = arg.split('_');
+    const formattedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    return formattedWords.join(' ');
+    }
 
 function createAnimationInfo(animation) {
     const animationInfoContainer = document.createElement('div');

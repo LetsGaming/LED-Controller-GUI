@@ -13,13 +13,10 @@ body {
     justify-content: center;
     align-items: center;
     background-color: gray;
-    padding: 20px;
 }
 
 .main {
     margin-left: 160px;
-    /* Same as the width of the sidenav */
-    padding: 0px 10px;
 }
 
 .sidenav {
@@ -35,7 +32,7 @@ body {
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.sidenav a{
+.sidenav a {
     border-radius: 2em;
     padding: 12px;
     text-decoration: none;
@@ -122,16 +119,18 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .content {
-    display: table-caption;
+    display: inline-block;
     text-align: center;
     padding: 20px;
     background-color: #333;
     border-radius: 2em;
+    width: auto;
 }
 
 #animation-container {
     margin-bottom: 30px;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .codepen-button {
@@ -147,14 +146,10 @@ input[type="range"]::-moz-range-thumb {
     overflow: hidden;
     padding: 3px;
     isolation: isolate;
-    width: 200px;
     margin-top: 3px;
     margin-bottom: 3px;
     margin-right: 5px;
-}
-
-.codepen-button:last-child {
-    margin-right: 0px;
+    flex: 2 0 21%;
 }
 
 .codepen-button::before {
@@ -344,8 +339,12 @@ label {
         padding: 9px;
     }
 
-    .sidenav span {
-        margin-left: 0 !important;
+    input[type="range"] {
+        width: 90% !important;
+    }
+
+    #brightness-value {
+        color: #fff;
     }
 
     .sidenav a:hover {
@@ -372,7 +371,7 @@ label {
     }
 
     .content {
-        margin-top: 35%;
+        margin-top: 38%;
         width: 400px;
     }
 

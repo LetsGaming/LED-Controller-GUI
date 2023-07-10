@@ -1,6 +1,21 @@
+// Event listener for slide input changes
+const brightnessSlider = document.getElementById('brightness')
+
+brightnessSlider.addEventListener('input', function () {
+    document.getElementById("brightness-value").textContent = this.value;
+});
+
+brightnessSlider.addEventListener('change', function () {
+    var value = this.value;
+    console.log('Value set:', value);
+
+    setBrightness(value);
+});
+
 // Global variables
 let currentCategory;
 let currentAnimations;
+let multipleColors = false;
 
 async function loadAnimations(category) {
     deleteArgsInput();
@@ -16,6 +31,7 @@ async function loadAnimations(category) {
 
     currentAnimations = await getCurrentAnimations(category);
     createButtons();
+    getBrightnessAndSetDisplay();
 }
 
 async function getCurrentAnimations(category) {
@@ -68,21 +84,21 @@ function populateArgsInput(animation) {
     argumentInputContainer.id = 'argumentInputContainer';
 
     argsContainer.innerHTML = ''; // Clear existing content
-
+    
     const closeButton = document.createElement('span');
     closeButton.textContent = 'X';
     closeButton.addEventListener('click', () => {
         deleteArgsInput();
     });
     argsContainer.appendChild(closeButton);
-
+    
     createAnimationInfo(animation);
-
+    
     const amountOfColorPickers = getAmountOfColors(animation);
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
     }
-
+    
     if (animation.args.length > 0) {
         if (animation.args.length > amountOfColorPickers * 3) {
             argsContainer.classList.remove('hide');
@@ -91,14 +107,14 @@ function populateArgsInput(animation) {
             argumentInputContainer.appendChild(argsTitle);
             argsContainer.appendChild(argumentInputContainer);
         }
-
+    
         const argItems = animation.args
             .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg))
             .map(arg => {
                 const argItem = document.createElement('div');
                 argItem.classList.add('arg-item');
                 const argLabel = document.createElement('label');
-                argLabel.textContent = `${arg.charAt(0).toUpperCase()}${arg.slice(1)}:`;
+                argLabel.textContent = `${formatArgLabel(arg)}:`;
                 const argInput = document.createElement('input');
                 argInput.type = 'number';
                 argInput.value = 1;
@@ -115,24 +131,41 @@ function populateArgsInput(animation) {
                 argItem.appendChild(argInput);
                 return argItem;
             });
-
+    
         argumentInputContainer.append(...argItems);
     } else {
         argsContainer.classList.add('hide');
     }
-
+    
+    if (animation.args.includes('colors')) {
+        multipleColors = true;
+        const addColorPickerButton = document.createElement('button');
+        addColorPickerButton.textContent = 'Add Color Picker';
+        addColorPickerButton.addEventListener('click', () => {
+            const colorPickerIndex = amountOfColorPickers;
+            createColorPicker(`Color ${colorPickerIndex}:`, `color-${colorPickerIndex}`);
+        });
+        argsContainer.appendChild(addColorPickerButton);
+    }
+    
     argsContainer.classList.remove('hide');
-
+    
     const startButton = document.createElement('button');
     startButton.id = 'start-animation';
     startButton.textContent = 'Start Animation';
     startButton.addEventListener('click', () => {
         startAnimation(animation, [getRGB(), ...getOtherArgs()]);
     });
-
+    
     argsContainer.appendChild(argumentInputContainer);
     argsContainer.appendChild(startButton);
-}
+    }
+    
+    function formatArgLabel(arg) {
+    const words = arg.split('_');
+    const formattedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    return formattedWords.join(' ');
+    }
 
 function createAnimationInfo(animation) {
     const animationInfoContainer = document.createElement('div');
@@ -231,38 +264,58 @@ function getOtherArgs() {
     return args;
 }
 
+function getBrightnessAndSetDisplay() {
+    var apiUrl = 'http://192.168.1.110:5000/led/getBrightness';
+
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API call failed');
+            }
+        })
+        .then(data => {
+            const brightnessDisplay = document.getElementById("brightness-value");
+            const current_brightness = data['current_brightness'];
+            brightnessDisplay.textContent = current_brightness;
+            brightnessSlider.value = current_brightness;
+        })
+        .catch(error => {
+            console.error('API call failed:', error);
+        });
+    
+}
+
 function setBrightness(value) {
     var apiUrl = 'http://192.168.1.110:5000/led/brightness';
-    
+
     fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ brightness: value })
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ brightness: parseInt(value) })
     })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('API call failed');
-      }
-    })
-    .then(data => {
-      console.log('API call successful:', data);
-    })
-    .catch(error => {
-      console.error('API call failed:', error);
-    });
-  }
-  
-  // Event listener for slide input changes
-  document.getElementById('brightness').addEventListener('change', function() {
-    var value = this.value;
-    console.log('Value set:', value);
-    
-    setBrightness(value);
-  });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API call failed');
+            }
+        })
+        .then(data => {
+
+        })
+        .catch(error => {
+            console.error('API call failed:', error);
+        });
+}
 
 async function startAnimation(animation, args) {
     const animationArgs = animation.args;
@@ -283,8 +336,6 @@ async function startAnimation(animation, args) {
         return data;
     }, {});
 
-    console.log("requestData", requestData);
-
     const fetchOptions = {
         method: 'POST',
         headers: {
@@ -297,7 +348,6 @@ async function startAnimation(animation, args) {
         const response = await fetch(apiUrl, fetchOptions);
         if (response.ok) {
             const data = await response.json();
-            console.log(data); // Handle the response data
             createScriptOutput(animation, args);
         } else {
             const errorData = await response.json();

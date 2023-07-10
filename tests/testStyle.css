@@ -13,13 +13,10 @@ body {
     justify-content: center;
     align-items: center;
     background-color: gray;
-    padding: 20px;
 }
 
 .main {
     margin-left: 160px;
-    /* Same as the width of the sidenav */
-    padding: 0px 10px;
 }
 
 .sidenav {
@@ -45,7 +42,13 @@ body {
     transition: color 0.5s;
 }
 
-.sidenav a:hover{
+.sidenav span {
+    font-size: 18px;
+    color: #fff;
+    margin-left: 45%;
+}
+
+.sidenav a:hover {
     color: black;
     background-image:
         linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
@@ -64,43 +67,44 @@ body {
 #brightness-label {
     color: white;
 }
+
 input[type="range"] {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     width: 100%;
     cursor: pointer;
     outline: none;
     overflow: hidden;
     background: transparent;
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-webkit-slider-runnable-track {
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
     height: 25px;
     background: linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-moz-range-track {
+}
+
+input[type="range"]::-moz-range-track {
     height: 25px;
     background: linear-gradient(to right, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
     border-radius: 16px;
-  }
-  
-  input[type="range"]::-webkit-slider-thumb {
+}
+
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none; 
+    appearance: none;
     height: 25px;
     width: 25px;
     background-color: #fff;
     border-radius: 50%;
     border: 2px solid gray;
     box-shadow: 407px 0 0 400px gray;
-  }
-  
-  
-  /* Thumb: Firefox */
-  input[type="range"]::-moz-range-thumb {
+}
+
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
     height: 25px;
     width: 25px;
     background-color: #fff;
@@ -108,23 +112,25 @@ input[type="range"] {
     border: 1px solid gray;
     /*  slider progress trick  */
     box-shadow: -407px 0 0 -400px gray;
-  }
+}
 
 .right-sidebarshow {
     right: 0;
 }
 
 .content {
-    display: table-caption;
+    display: inline-block;
     text-align: center;
     padding: 20px;
     background-color: #333;
     border-radius: 2em;
+    width: auto;
 }
 
 #animation-container {
     margin-bottom: 30px;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .codepen-button {
@@ -140,14 +146,10 @@ input[type="range"] {
     overflow: hidden;
     padding: 3px;
     isolation: isolate;
-    width: 200px;
     margin-top: 3px;
     margin-bottom: 3px;
     margin-right: 5px;
-}
-
-.codepen-button:last-child {
-    margin-right: 0px;
+    flex: 2 0 21%;
 }
 
 .codepen-button::before {
@@ -337,6 +339,14 @@ label {
         padding: 9px;
     }
 
+    input[type="range"] {
+        width: 90% !important;
+    }
+
+    #brightness-value {
+        color: #fff;
+    }
+
     .sidenav a:hover {
         translate: 0% !important;
     }
@@ -361,7 +371,7 @@ label {
     }
 
     .content {
-        margin-top: 35%;
+        margin-top: 38%;
         width: 400px;
     }
 

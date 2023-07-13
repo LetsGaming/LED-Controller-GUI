@@ -215,7 +215,6 @@
   }
   
   #animation-container {
-    margin-bottom: 30px;
     display: flex;
     flex-wrap: wrap;
   }
@@ -412,7 +411,7 @@
   
   @media only screen and (max-width: 768px) {
     .sidenav {
-      height: 125px !important;
+      height: 120px !important;
       width: 100%;
       padding-top: 0% !important;
       text-align: center;
@@ -452,18 +451,20 @@
   
     .content {
       margin-top: 38%;
-      width: 400px;
     }
   
     #animation-container {
-      display: inline-block !important;
       margin-bottom: 0 !important;
     }
   
     .codepen-button {
       width: 150px !important;
-      font-size: 0.9rem;
       margin-right: 0px !important;
+    }
+
+    .codepen-button span {
+        font-size: 14px !important;
+        padding: 13px !important;
     }
   }
   

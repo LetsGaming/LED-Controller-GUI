@@ -92,12 +92,12 @@ function getOnlineState() {
 }
 
 function updateUI() {
-    const scriptOutput = clearAndGetScriptOutput();
+    const scriptOutput = document.getElementById("script-output");
 
     sidenav.style.display = onlineState ? "block" : "none";
     brightnessContainer.style.display = onlineState ? "block" : "none";
     animationsLabel.style.display = onlineState ? "block" : "none";
-    scriptOutput.classList.toggle("hide", onlineState);
+    scriptOutput.style.display = onlineState ? "block" : "none";
 
     checkbox.checked = onlineState;
     onlineStateContainer.classList.toggle("slideractive", onlineState);
@@ -112,7 +112,6 @@ function updateUI() {
 // Function to load animations
 async function loadAnimations(category) {
     deleteArgsInput();
-
     if (onlineState) {
         currentCategory = category;
         const categoryList = document.getElementById('category-list');
@@ -169,7 +168,7 @@ function createButton(animation) {
 function deleteArgsInput() {
     try {
         argsContainer.innerHTML = '';
-        argsContainer.classList.add("hide");
+        argsContainer.style.display = "none";
     } catch (error) {
         console.error('Error:', error);
     }
@@ -199,7 +198,7 @@ function populateArgsInput(animation) {
 
     if (animation.args.length > 0) {
         if (animation.args.length > amountOfColorPickers * 3) {
-            argsContainer.classList.remove('hide');
+            argsContainer.style.display = "block";
             const argsTitle = document.createElement('h3');
             argsTitle.textContent = 'Animation Arguments:';
             argumentInputContainer.appendChild(argsTitle);
@@ -232,7 +231,7 @@ function populateArgsInput(animation) {
 
         argumentInputContainer.append(...argItems);
     } else {
-        argsContainer.classList.add('hide');
+        argsContainer.style.display = "none";
     }
 
     if (animation.args.includes('colors')) {
@@ -246,7 +245,7 @@ function populateArgsInput(animation) {
         argsContainer.appendChild(addColorPickerButton);
     }
 
-    argsContainer.classList.remove('hide');
+    argsContainer.style.display = "block";
 
     const startButton = document.createElement('button');
     startButton.id = 'start-animation';
@@ -453,7 +452,7 @@ async function startAnimation(animation, args) {
 function clearAndGetScriptOutput() {
     const scriptOutput = document.getElementById('script-output');
     scriptOutput.textContent = '';
-    scriptOutput.classList.remove('hide');
+    scriptOutput.style.display = "block";
     return scriptOutput;
 }
 

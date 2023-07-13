@@ -92,10 +92,13 @@ function getOnlineState() {
 }
 
 function updateUI() {
+    const scriptOutput = clearAndGetScriptOutput();
+
     sidenav.style.display = onlineState ? "block" : "none";
     brightnessContainer.style.display = onlineState ? "block" : "none";
     animationsLabel.style.display = onlineState ? "block" : "none";
-  
+    scriptOutput.classList.toggle("hide", onlineState);
+
     checkbox.checked = onlineState;
     onlineStateContainer.classList.toggle("slideractive", onlineState);
     toggleLabelOn.style.opacity = onlineState ? '1' : '0';

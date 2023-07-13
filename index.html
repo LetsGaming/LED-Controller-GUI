@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="http://192.168.1.110:5000/favicon.ico"> <!-- Change this if you don't wanna use the APIs Icon -->
     <style>
         @import url("style.css");
     </style>
@@ -18,68 +17,75 @@
             <li><a onclick="loadAnimations('start')">Start Animations</a></li>
             <li><a onclick="loadAnimations('standard')">Standard Animations</a></li>
             <li><a onclick="loadAnimations('custom')">Custom Animations</a></li>
-            <li><a onclick="loadAnimations('special')">Special Animations</a></li>         
+            <li><a onclick="loadAnimations('special')">Special Animations</a></li>
         </ul>
     </div>
-<div class="main">
-    <div class="content">
-        <h2>Select an animation:</h2>
+    <div class="main">
+        <div class="content">
+            <label class="switch">
+                <div class="toggle-label on">On</div>
+                <div class="toggle-label off">Off</div>
+                <input type="checkbox" id="checkbox">
+                <span id="switch" class="slider round"></span>
+            </label>
+            <h2 id="animationsLabel">Select an animation:</h2>
 
-        <div id="animation-container"></div>
+            <div id="animation-container"></div>
 
-        <div id="args-container" class="hide">
+            <div id="args-container" class="hide">
 
-            <div class="flex-container"></div>
+                <div class="flex-container"></div>
+            </div>
+
+            <div id="script-output" class="script-output hide"></div>
         </div>
-
-        <div id="script-output" class="script-output hide"></div>
     </div>
-</div>
 
-<script>
-    createBrightnessSettings();
+    <script>
+        createBrightnessSettings();
+        function createBrightnessSettings() {
+            // Create input element and label to control the brightness of the page:
+            const sliderLabel = document.createElement('label');
+            sliderLabel.setAttribute('id', 'brightness-label');
+            sliderLabel.setAttribute('for', 'brightness');
+            sliderLabel.textContent = 'Adjust Brightness:';
 
-    function createBrightnessSettings() {
-        // Create input element and label to control the brightness of the page:
-        const sliderLabel = document.createElement('label');
-        sliderLabel.setAttribute('id', 'brightness-label');
-        sliderLabel.setAttribute('for', 'brightness');
-        sliderLabel.textContent =  'Adjust Brightness:';
-            
-        const sliderInput = document.createElement('input');
-        sliderInput.setAttribute('id', 'brightness');
-        sliderInput.setAttribute('type', 'range');
-        sliderInput.setAttribute('min', '0');
-        sliderInput.setAttribute('max', '255');
+            const sliderInput = document.createElement('input');
+            sliderInput.setAttribute('id', 'brightness');
+            sliderInput.setAttribute('type', 'range');
+            sliderInput.setAttribute('min', '0');
+            sliderInput.setAttribute('max', '255');
 
-        const sliderValue = document.createElement('span');
-        sliderValue.setAttribute('id', 'brightness-value');
+            const sliderValue = document.createElement('span');
+            sliderValue.setAttribute('id', 'brightness-value');
 
-        if (isMobile()) {
-            const container = document.querySelector('.content');
-            const brightnessContainer = document.createElement('div');
-            brightnessContainer.classList.add('brightness-settings');
+            if (isMobile()) {
+                const container = document.querySelector('.switch');
+                const brightnessContainer = document.createElement('div');
+                brightnessContainer.setAttribute('id', 'brightnessContainer');
+                brightnessContainer.classList.add('brightness-settings');
 
-            brightnessContainer.appendChild(sliderLabel);
-            brightnessContainer.appendChild(sliderInput);
-            brightnessContainer.appendChild(document.createElement('br'));
-            brightnessContainer.appendChild(sliderValue);
-            container.insertBefore(brightnessContainer, container.firstChild);
-        } else {
-            const container = document.getElementById('category-list');
-            const brightnessContainer = document.createElement('li');
+                brightnessContainer.appendChild(sliderLabel);
+                brightnessContainer.appendChild(sliderInput);
+                brightnessContainer.appendChild(document.createElement('br'));
+                brightnessContainer.appendChild(sliderValue);
+                container.parentNode.insertBefore(brightnessContainer, container.nextSibling)
+            } else {
+                const container = document.getElementById('category-list');
+                const brightnessContainer = document.createElement('li');
+                brightnessContainer.setAttribute('id', 'brightnessContainer');
 
-            brightnessContainer.appendChild(sliderLabel);
-            brightnessContainer.appendChild(sliderInput);
-            brightnessContainer.appendChild(sliderValue);
-            container.appendChild(brightnessContainer);
+                brightnessContainer.appendChild(sliderLabel);
+                brightnessContainer.appendChild(sliderInput);
+                brightnessContainer.appendChild(sliderValue);
+                container.appendChild(brightnessContainer);
+            }
         }
-    }
 
-    function isMobile() {
-        return window.innerWidth < 770;
-    }
-</script>
+        function isMobile() {
+            return window.innerWidth < 770;
+        }
+    </script>
 </body>
 
 </html>

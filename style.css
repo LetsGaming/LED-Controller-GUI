@@ -411,15 +411,17 @@
   
   @media only screen and (max-width: 768px) {
     .sidenav {
-      height: 120px !important;
+      height: 160px !important;
       width: 100%;
       padding-top: 0% !important;
       text-align: center;
     }
-  
+    .sidenav ul:first-child {
+      margin-top: 12px;
+    }
     .sidenav a {
       font-size: 16px;
-      padding: 6px;
+      padding: 8px !important;
     }
   
     #brightness-value {
@@ -428,16 +430,6 @@
   
     .sidenav a:hover {
       translate: 0% !important;
-    }
-  
-    .right-sidebar {
-      width: 100%;
-      right: -100%;
-      height: auto;
-    }
-  
-    .right-sidebar.open {
-      right: 0;
     }
   
     #slider {

@@ -1,3 +1,9 @@
+// API variables
+const raspberryPiIp = "192.168.1.110";
+const apiPort = "5000"
+const baseUrl = `http://${RaspberryPiIp}:${apiPort}`
+
+// Global variables
 const checkbox = document.getElementById("checkbox");
 const toggleLabelOn = document.querySelector('.toggle-label.on');
 const toggleLabelOff = document.querySelector('.toggle-label.off');
@@ -9,7 +15,6 @@ const brightnessSlider = document.getElementById('brightness');
 const argsContainer = document.getElementById('args-container');
 const onlineStateContainer = document.getElementById("switch");
 
-// Global variables
 let onlineState;
 let currentCategory;
 let currentAnimations;
@@ -27,7 +32,7 @@ function handleCheckboxChange() {
     const online = this.checked;
     const params = { online: online };
 
-    fetch('http://192.168.1.110:5000/led/set_online_state', {
+    fetch(`${baseUrl}/led/set_online_state`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params)
@@ -72,7 +77,7 @@ function handleError(error) {
 
 // Function to get online state
 function getOnlineState() {
-    const apiUrl = 'http://192.168.1.110:5000/led/get_online_state';
+    const apiUrl = `${baseUrl}/led/get_online_state`;
 
     fetch(apiUrl, {
         method: 'GET',
@@ -91,6 +96,7 @@ function getOnlineState() {
         .catch(handleError);
 }
 
+// Function to update the whole Interface
 function updateUI() {
     const scriptOutput = document.getElementById("script-output");
 
@@ -132,7 +138,7 @@ async function loadAnimations(category) {
 // Function to get current animations
 async function getCurrentAnimations(category) {
     try {
-        const response = await fetch(`http://192.168.1.110:5000/led/animations/${category}`);
+        const response = await fetch(`${baseUrl}/led/animations/${category}`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -371,7 +377,7 @@ function getOtherArgs() {
 
 // Function to get brightness and update display
 function getBrightnessAndSetDisplay() {
-    const apiUrl = 'http://192.168.1.110:5000/led/get_brightness';
+    const apiUrl = `${baseUrl}/led/get_brightness`;
 
     fetch(apiUrl, {
         method: 'GET',
@@ -389,7 +395,7 @@ function getBrightnessAndSetDisplay() {
 
 // Function to set brightness
 function setBrightness(value) {
-    const apiUrl = 'http://192.168.1.110:5000/led/brightness';
+    const apiUrl = `${baseUrl}/led/brightness`;
 
     fetch(apiUrl, {
         method: 'POST',
@@ -406,9 +412,9 @@ async function startAnimation(animation, args) {
     const args0 = args[0];
 
     const correctAnimationName = animation.name.toLowerCase().replace(/ /g, '_');
-    let apiUrl = `http://192.168.1.110:5000/led/animations/${currentCategory}/${correctAnimationName}`;
+    let apiUrl = `${baseUrl}/led/animations/${currentCategory}/${correctAnimationName}`;
     if (currentCategory === 'start') {
-        apiUrl = `http://192.168.1.110:5000/led/${correctAnimationName}`;
+        apiUrl = `${baseUrl}/led/${correctAnimationName}`;
     }
 
     const requestData = animationArgs.reduce((data, arg, index) => {
@@ -480,7 +486,7 @@ function createScriptOutput(animation, args) {
                     .filter(argName => !/^(red|green|blue)$|_(red|green|blue)$/.test(argName))
                     .map((argName, i) => {
                         const argValue = args[i + 1];
-                        return `<br>${argName}: ${argValue}`;
+                        return `<br>${formatArgLabel(argName)}: ${argValue}`;
                     })
             );
 

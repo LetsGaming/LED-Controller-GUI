@@ -1,7 +1,7 @@
 // API variables
-const raspberryPiIp = "192.168.1.110";
+const raspberryPiIp = "192.168.1.116";
 const apiPort = "5000"
-const baseUrl = `http://${RaspberryPiIp}:${apiPort}`
+const baseUrl = `http://${raspberryPiIp}:${apiPort}`
 
 // Global variables
 const checkbox = document.getElementById("checkbox");

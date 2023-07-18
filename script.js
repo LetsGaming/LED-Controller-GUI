@@ -109,11 +109,11 @@ function updateUI() {
     onlineStateContainer.classList.toggle("slideractive", onlineState);
     toggleLabelOn.style.opacity = onlineState ? '1' : '0';
     toggleLabelOff.style.opacity = onlineState ? '0' : '1';
-  
+
     if (!onlineState) {
-      animationContainer.innerHTML = '';
+        animationContainer.innerHTML = '';
     }
-  }
+}
 
 // Function to load animations
 async function loadAnimations(category) {
@@ -212,7 +212,7 @@ function populateArgsInput(animation) {
         }
 
         const argItems = animation.args
-            .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg))
+            .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg) && !/^(colors)$/.test(arg))
             .map(arg => {
                 const argItem = document.createElement('div');
                 argItem.classList.add('arg-item');

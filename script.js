@@ -18,6 +18,8 @@ const onlineStateContainer = document.getElementById("switch");
 let onlineState;
 let currentCategory;
 let currentAnimations;
+let amountOfColorPickers;
+let colorPickerContainers = [];
 let multipleColors = false;
 
 // Event listener for checkbox change
@@ -197,7 +199,7 @@ function populateArgsInput(animation) {
 
     createAnimationInfo(animation);
 
-    const amountOfColorPickers = getAmountOfColors(animation);
+    amountOfColorPickers = getAmountOfColors(animation);
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
     }
@@ -242,13 +244,29 @@ function populateArgsInput(animation) {
 
     if (animation.args.includes('colors')) {
         multipleColors = true;
+        const colorPickerButtonsContainer = document.createElement('div');
+        colorPickerButtonsContainer.setAttribute('class', 'button-container');
+
+        const removeLastColorPickerButton = document.createElement('button');
+        removeLastColorPickerButton.setAttribute('class', 'color-picker-button');
+        removeLastColorPickerButton.setAttribute('id', 'remove-color-picker');
+        removeLastColorPickerButton.textContent = 'Remove Color Picker';
+        removeLastColorPickerButton.addEventListener('click', () => {
+            removeLastColorPicker();
+        })
+
         const addColorPickerButton = document.createElement('button');
+        addColorPickerButton.setAttribute('class', 'color-picker-button');
+        addColorPickerButton.setAttribute('id', 'add-color-picker');
         addColorPickerButton.textContent = 'Add Color Picker';
         addColorPickerButton.addEventListener('click', () => {
             const colorPickerIndex = amountOfColorPickers;
             createColorPicker(`Color ${colorPickerIndex}:`, `color-${colorPickerIndex}`);
         });
-        argsContainer.appendChild(addColorPickerButton);
+        colorPickerButtonsContainer.appendChild(removeLastColorPickerButton);
+        colorPickerButtonsContainer.appendChild(addColorPickerButton);
+
+        argsContainer.appendChild(colorPickerButtonsContainer);
     }
 
     argsContainer.style.display = "block";
@@ -331,6 +349,19 @@ function createColorPicker(labelText, argPrefix) {
     flexContainer.classList.add('flex-container');
     flexContainer.appendChild(colorPickerContainer);
     argsContainer.appendChild(flexContainer);
+
+    amountOfColorPickers += 1;
+    colorPickerContainers.push(colorPickerContainer);
+}
+
+function removeLastColorPicker() {
+    if (amountOfColorPickers > 0) {
+        const lastColorPickerContainer = colorPickerContainers.pop();
+        if (lastColorPickerContainer && lastColorPickerContainer.parentNode) {
+            lastColorPickerContainer.parentNode.remove();
+            amountOfColorPickers -= 1;
+        }
+    }
 }
 
 // Function to convert hex color to RGB
@@ -362,6 +393,21 @@ function getRGB() {
         }
     });
     return rgbValues;
+}
+
+function convertToCustomColors(rgbArray) {
+    if (rgbArray.length % 3 !== 0) {
+        throw new Error("Invalid input: RGB array length must be a multiple of 3.");
+    }
+
+    const customColors = [];
+    for (let i = 0; i < rgbArray.length; i += 3) {
+        const r = rgbArray[i];
+        const g = rgbArray[i + 1];
+        const b = rgbArray[i + 2];
+        customColors.push([r, g, b]);
+    }
+    return customColors;
 }
 
 // Function to get other argument values
@@ -419,13 +465,22 @@ async function startAnimation(animation, args) {
 
     const requestData = animationArgs.reduce((data, arg, index) => {
         if (index < args0.length) {
-            data[arg] = args0[index];
+            console.log("color detected");
+            if (arg === 'colors') {
+                data[arg] = convertToCustomColors(args0);
+                console.log("data[arg]", data[arg]);
+            } else {
+                console.log("not custom colors detected");
+                data[arg] = args0[index];
+            }
         } else {
+            console.log("other args detected");
             data[arg] = args[index - args0.length + 1];
         }
         return data;
-    }, {});
+    }, {});    
 
+    console.log("requestData", requestData);
     const fetchOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -356,6 +356,13 @@ function createArgumentInput() {
   return argInput;
 }
 
+// Function to create argument title
+function createArgsTitle(container) {
+  const argsTitle = document.createElement('h3');
+  argsTitle.textContent = 'Animation Arguments:';
+  container.appendChild(argsTitle);
+}
+
 // Function to clear script output
 function clearAndGetScriptOutput() {
   const scriptOutput = elements.scriptOutput;

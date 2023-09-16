@@ -196,14 +196,17 @@ function populateArgsInput(animation) {
     closeButton.textContent = 'X';
     closeButton.addEventListener('click', deleteArgsInput);
     argsContainer.appendChild(closeButton);
-
+    console.log("creating animation info");
     createAnimationInfo(animation);
 
+    console.log("getting amnt of colors");
     amountOfColorPickers = getAmountOfColors(animation);
+    console.log("creating color picker");
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
     }
 
+    console.log("creating other anim args");
     if (animation.args.length > 0) {
         if (animation.args.length > amountOfColorPickers * 3) {
             argsContainer.style.display = "block";
@@ -242,6 +245,7 @@ function populateArgsInput(animation) {
         argsContainer.style.display = "none";
     }
 
+    console.log("checking for custom color amount");
     if (animation.args.includes('colors')) {
         multipleColors = true;
         const colorPickerButtonsContainer = document.createElement('div');
@@ -269,6 +273,7 @@ function populateArgsInput(animation) {
         argsContainer.appendChild(colorPickerButtonsContainer);
     }
 
+    console.log("checking for custom color amount");
     argsContainer.style.display = "block";
 
     const startButton = document.createElement('button');
@@ -333,6 +338,7 @@ function getAmountOfColors(animation) {
 
 // Function to create a color picker
 function createColorPicker(labelText, argPrefix) {
+    console.log("creating new color picker");
     const colorPickerContainer = document.createElement('div');
     colorPickerContainer.classList.add('color-picker-container');
 
@@ -352,6 +358,7 @@ function createColorPicker(labelText, argPrefix) {
 
     amountOfColorPickers += 1;
     colorPickerContainers.push(colorPickerContainer);
+    console.log("finished creating new color picker");
 }
 
 function removeLastColorPicker() {

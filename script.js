@@ -201,6 +201,7 @@ function populateArgsInput(animation) {
 
     console.log("getting amnt of colors");
     amountOfColorPickers = getAmountOfColors(animation);
+    console.log("amount of color picker", amountOfColorPickers);
     console.log("creating color picker");
     for (let index = 0; index < amountOfColorPickers; index++) {
         createColorPicker(`Color ${index}:`, `color-${index}`);
@@ -247,6 +248,7 @@ function populateArgsInput(animation) {
 
     console.log("checking for custom color amount");
     if (animation.args.includes('colors')) {
+        console.log("has color amount");
         multipleColors = true;
         const colorPickerButtonsContainer = document.createElement('div');
         colorPickerButtonsContainer.setAttribute('class', 'button-container');

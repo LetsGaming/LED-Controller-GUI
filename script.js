@@ -321,6 +321,24 @@ function createStartButton(animation) {
   return startButton;
 }
 
+// Function to create argument items
+function createArgumentItems(container, args) {
+  const argItems = args
+    .filter(arg => !/^(red|green|blue)$|_(red|green|blue)$/.test(arg) && !/^(colors)$/.test(arg))
+    .map(arg => {
+      const argItem = document.createElement('div');
+      argItem.classList.add('arg-item');
+      const argLabel = document.createElement('label');
+      argLabel.textContent = `${formatArgLabel(arg)}:`;
+      const argInput = createArgumentInput();
+      argItem.appendChild(argLabel);
+      argItem.appendChild(argInput);
+      return argItem;
+    });
+
+  container.append(...argItems);
+}
+
 // Function to clear script output
 function clearAndGetScriptOutput() {
   const scriptOutput = elements.scriptOutput;

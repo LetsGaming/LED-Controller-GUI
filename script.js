@@ -339,6 +339,23 @@ function createArgumentItems(container, args) {
   container.append(...argItems);
 }
 
+// Function to create argument input
+function createArgumentInput() {
+  const argInput = document.createElement('input');
+  argInput.type = 'number';
+  argInput.value = 1;
+  argInput.setAttribute('oninput', 'validity.valid||(value="")');
+  argInput.setAttribute('min', 1);
+  argInput.required = true;
+  argInput.classList.add('arg-input');
+  argInput.addEventListener('change', () => {
+    if (argInput.value < 1) {
+      argInput.value = 1;
+    }
+  });
+  return argInput;
+}
+
 // Function to clear script output
 function clearAndGetScriptOutput() {
   const scriptOutput = elements.scriptOutput;

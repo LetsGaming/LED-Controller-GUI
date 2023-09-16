@@ -302,7 +302,13 @@ function createColorPicker(labelText, argPrefix) {
   state.colorPickerContainers.push(colorPickerContainer);
 }
 
-// Rest of the functions...
+// Function to create a close button
+function createCloseButton() {
+  const closeButton = document.createElement('span');
+  closeButton.textContent = 'X';
+  closeButton.addEventListener('click', deleteArgsInput);
+  return closeButton;
+}
 
 // Function to create a start button
 function createStartButton(animation) {

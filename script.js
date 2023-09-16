@@ -196,15 +196,19 @@ function populateArgsInput(animation) {
     closeButton.textContent = 'X';
     closeButton.addEventListener('click', deleteArgsInput);
     argsContainer.appendChild(closeButton);
-    console.log("creating animation info");
+
     createAnimationInfo(animation);
 
     console.log("getting amnt of colors");
     amountOfColorPickers = getAmountOfColors(animation);
     console.log("amount of color picker", amountOfColorPickers);
-    console.log("creating color picker");
-    for (let index = 0; index < amountOfColorPickers; index++) {
-        createColorPicker(`Color ${index}:`, `color-${index}`);
+
+    // Check if color pickers have already been created
+    if (colorPickerContainers.length === 0) {
+        console.log("creating color picker");
+        for (let index = 0; index < amountOfColorPickers; index++) {
+            createColorPicker(`Color ${index}:`, `color-${index}`);
+        }
     }
 
     console.log("creating other anim args");

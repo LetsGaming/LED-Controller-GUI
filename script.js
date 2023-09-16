@@ -202,12 +202,10 @@ function populateArgsInput(animation) {
     amountOfColorPickers = getAmountOfColors(animation);
     const colorAmount = amountOfColorPickers;
 
-    // Check if color pickers have already been created
-    if (colorPickerContainers.length === 0) {
-        for (let index = 0; index < colorAmount; index++) {
-            createColorPicker(`Color ${index}:`, `color-${index}`);
-        }
+    for (let index = 0; index < colorAmount; index++) {
+        createColorPicker(`Color ${index}:`, `color-${index}`);
     }
+
 
     if (animation.args.length > 0) {
         if (animation.args.length > amountOfColorPickers * 3) {
@@ -247,9 +245,7 @@ function populateArgsInput(animation) {
         argsContainer.style.display = "none";
     }
 
-    console.log("checking for custom color amount");
     if (animation.args.includes('colors')) {
-        console.log("has color amount");
         multipleColors = true;
         const colorPickerButtonsContainer = document.createElement('div');
         colorPickerButtonsContainer.setAttribute('class', 'button-container');
@@ -472,22 +468,17 @@ async function startAnimation(animation, args) {
 
     const requestData = animationArgs.reduce((data, arg, index) => {
         if (index < args0.length) {
-            console.log("color detected");
             if (arg === 'colors') {
                 data[arg] = convertToCustomColors(args0);
-                console.log("data[arg]", data[arg]);
             } else {
-                console.log("not custom colors detected");
                 data[arg] = args0[index];
             }
         } else {
-            console.log("other args detected");
             data[arg] = args[index - args0.length + 1];
         }
         return data;
-    }, {});    
+    }, {});
 
-    console.log("requestData", requestData);
     const fetchOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

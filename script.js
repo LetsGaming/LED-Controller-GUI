@@ -1,5 +1,5 @@
 // API variables
-const raspberryPiIp = "192.168.8.65";
+const raspberryPiIp = "192.168.2.112";
 const apiPort = "5000"
 const baseUrl = `http://${raspberryPiIp}:${apiPort}`
 

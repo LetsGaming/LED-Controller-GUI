@@ -1,3 +1,6 @@
+Obsolete: I will no longer support this version of the implementation.<br>
+You're still free to use it, but if you want further support see: [LED-Controller-Websocket](https://github.com/LetsGaming/LED-Controller-Websocket)
+
 # LED-Controller-GUI
 This repository contains HTML, CSS, and JavaScript code for an animation selection GUI. The GUI allows users to select and configure various animations to be displayed on an LED strip via an API. The animations are categorized into four groups: start animations, standard animations, custom animations, and special animations.
 ### Note
